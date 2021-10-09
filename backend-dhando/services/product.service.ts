@@ -27,14 +27,18 @@ export class ProductService {
         })
         try {
           await productItem.validate()
-            return await productItem.save().then(u => this.getProductById(u!.id));
+            console.log('sdsd')
+           return  productItem.save().then(u => this.getProductById(u!.id));
+
+
+
         }catch(e){
             if (e instanceof  ValidationError){
                 let message=[];
                 e.errors.map(e=> {
                    message.push({message: e.message+" Options should be one of "+e.validatorArgs})
                 })
-                return {status:500,message};
+                return {status:202,message};
             }
 
         }

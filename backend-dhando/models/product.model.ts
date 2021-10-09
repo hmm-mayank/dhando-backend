@@ -2,7 +2,7 @@ import * as Sequelize from 'sequelize'
 import {sequelize}  from '../db/config'
 import {ENUM, FLOAT, INTEGER, STRING} from "sequelize";
 
-enum units {
+export enum units {
     'GRAM' = 'g',
     'KG' = 'kg',
     'QUANTITY' = 'q',

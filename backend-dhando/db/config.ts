@@ -13,5 +13,5 @@ const sequelize = new Sequelize(dbName, dbUser, dbPassword, {
 })
 
 sequelize.authenticate()
-sequelize.sync({force:true});
+sequelize.sync({force:false });
 export {sequelize}

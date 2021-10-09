@@ -17,6 +17,7 @@ productRouter.post('/register',ProductGlobalRule["forRegister"],(req,res)=>{
     const payload = req.body as ProductGlobalModel
     const product = productService.register(payload)
     return product.then(u => {
+        console.log(u)
         return  res.status(u?.status || 200).json(u)
     })
 })

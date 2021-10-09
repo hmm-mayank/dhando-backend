@@ -6,6 +6,7 @@ import { tokenGuard } from './middlewares/token-guard'
 import {productRouter} from "./routers/product.router";
 import morganMiddleware from "./config/morganMiddileWare";
 import {vendorRouter} from "./routers/vendor.router";
+import {billingRouter} from "./routers/billing.router";
 
 const app = express()
 const port = 4001
@@ -17,6 +18,7 @@ app.use(morganMiddleware)
 app.use('/', userRouter)
 app.use('/product', productRouter)
 app.use('/vendor', vendorRouter)
+app.use('/billing',billingRouter  )
 
 
 // Unprotected Get
