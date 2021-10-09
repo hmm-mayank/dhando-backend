@@ -12,7 +12,9 @@ export const ProductGlobalRule = {
 
     ],
     fetchAllProduct:[
-        check('offset',"Please pass offset").notEmpty()
+        check('offset',"Please pass offset").notEmpty(),
+        check('unit','g,ml,lit,gkg').notEmpty(),
+
     ]
 
 }

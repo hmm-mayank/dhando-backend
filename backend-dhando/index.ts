@@ -4,6 +4,8 @@ import * as bodyParser from 'body-parser'
 import { userRouter } from './routers/users.router'
 import { tokenGuard } from './middlewares/token-guard'
 import {productRouter} from "./routers/product.router";
+import morganMiddleware from "./config/morganMiddileWare";
+import {vendorRouter} from "./routers/vendor.router";
 
 const app = express()
 const port = 4001
@@ -11,8 +13,11 @@ const port = 4001
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(cors())
+app.use(morganMiddleware)
 app.use('/', userRouter)
 app.use('/product', productRouter)
+app.use('/vendor', vendorRouter)
+
 
 // Unprotected Get
 app.get('/some-resource', (req, res, next) => {
