@@ -6,10 +6,10 @@ import * as _ from "lodash"
 export class VendorService {
 
     static get vendorAttributes() {
-        return ['id','shopName','shopCategory','productIds']
+        return ['id','shopName','shopCategory','productIds',"shopGstnNumber","shopAddress","shopContactNumber"]
     }
 
-    addVendorProduct({shopName,productIds,userId,vendorId}:VendorModel){
+    addVendorProduct({shopName,productIds,userId,vendorId,vendorCode,shopAddress,shopCategory,shopGstnNumber,shopContactNumber}:VendorModel){
 
         /**
          * If Vendor Exists it will append the Product Array Else it will Create New One
@@ -19,7 +19,8 @@ export class VendorService {
               return  Vendor.update({productIds:_.uniqBy([...reponse.productIds,...productIds],"id") },{where:{vendorId:vendorId}}).then(repon=> Vendor.findOne({where:{'userId':userId}}))
             }
             else {
-                return Vendor.create({shopName,productIds,userId,vendorId}).then(vendor => this.getProductById(vendor!.id))
+                vendorCode = (Math.floor(100000 + Math.random() * 900000)).toString(); // vendor Code while Login
+                return Vendor.create({shopName,productIds,userId,vendorId,vendorCode,shopAddress,shopCategory,shopGstnNumber,shopContactNumber}).then(vendor => this.getProductById(vendor!.id))
             }
 
         })
@@ -32,8 +33,8 @@ export class VendorService {
     }
 
      getProductFromId({vendorId}: VendorViewModel) {
-        return  Vendor.findOne({
+        return  vendorId ? Vendor.findOne({
             where: {vendorId}
-        })
+        }) : Vendor.findAll()
     }
 }

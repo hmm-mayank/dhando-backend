@@ -4,7 +4,8 @@ import * as bcrypt from 'bcrypt'
 import * as jwt from 'jsonwebtoken'
 import * as Bluebird from 'Bluebird'
 import { User, UserModel, UserAddModel, UserViewModel } from '../models/user.model'
-
+import {MessageService} from "./message.service";
+const messageService = new MessageService();
 export class UserService {
     private readonly _saltRounds = 12
     private readonly _jwtSecret = '0.rfyj3n9nzh'
@@ -17,19 +18,43 @@ export class UserService {
         return UserService._user
     }
 
-    register({ phoneNumber, password }: UserAddModel) {
-        console.log(phoneNumber);
+    register({ phoneNumber, password,role }: UserAddModel) {
         return bcrypt.hash(password, this._saltRounds)
-            .then(hash => {
-                return User.create({ countryCode:91,phoneNumber:phoneNumber, password: hash })
-                    .then(u => this.getUserById(u!.id))
+
+        .then(hash => {
+                // @ts-ignore
+            return User.findOne({where:{'phoneNumber':phoneNumber}}).then(user=>{
+                    if (user){
+                        let randomNum = Math.floor(1000 + Math.random() * 9000);
+                       return messageService.register({phone:phoneNumber,otp:randomNum,userId:user?.id}).then(e=> {
+                          return user
+                       })
+
+                    }
+                    else {
+                        return User.create({ countryCode:91,phoneNumber:phoneNumber, password: hash,role })
+                            .then(async u =>  this.getUserById(u!.id))
+                    }
+                })
+
             })
     }
 
-    login({ phoneNumber }: UserAddModel) {
-        return User.findOne({ where: { phoneNumber } }).then(u => {
-            const { id, phoneNumber } = u!
-            return { token: jwt.sign({ id, phoneNumber }, this._jwtSecret) }
+    login({ phoneNumber,password }: UserAddModel) {
+        let num =phoneNumber;
+        return User.findOne({ where: { phoneNumber } }).then(async u => {
+            // @ts-ignore
+            let [result] = await Promise.all([messageService.getMessageByUserId({phone: num})])
+            console.log(result["dataValues"]["otp"].toString(),password.toString())
+            if(result["dataValues"]["otp"].toString() == password.toString()) {
+                    return u;
+
+            }
+            return {message:"Check phone and password"}
+
+
+
+
         })
     }
 

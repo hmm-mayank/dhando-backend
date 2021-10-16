@@ -23,7 +23,7 @@ userRouter.post('/register', userRules['forRegister'], (req, res) => {
 
 userRouter.post('/login', userRules['forLogin'], (req, res) => {
     const errors = validationResult(req)
-
+    console.log(errors.array())
     if (!errors.isEmpty())
         return res.status(422).json(errors.array())
 

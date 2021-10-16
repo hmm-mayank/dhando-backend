@@ -4,26 +4,34 @@ import * as Bluebird from 'Bluebird';
 import {ValidationError} from "sequelize";
 import {VendorService} from "./vendor.service";
 import {Product, ProductGlobalModel} from "../models/product.model";
+import { AWSURI, CallApi,billInvoice } from "../utils/callApi";
 
-
+const callApi = new CallApi();
 export class BillingService {
 
     static get billingAttributes() {
-        return ['customerPhone','cartProduct','id','customer','cartProduct','vendorId']
+        return ['customerPhone','cartProduct','id','customer','cartProduct','vendorId','invoicePath']
     }
     private static _billing
     static get billing() {
         return BillingService._billing
     }
-    async createBill({cashierId, customer, customerPhone, id, cartProduct, vendorId}: BillingModel) {
+    async createBill({cashierId, customer, customerPhone, id, cartProduct, vendorId,invoicePath}: BillingModel) {
+
 
         let billingItem = await Billing.build(
-            {cashierId, customer, customerPhone, id, cartProduct, vendorId}
+            {cashierId, customer, customerPhone, id, cartProduct, vendorId,invoicePath}
         )
 
         try {
             await billingItem.validate();
-            return billingItem.save().then(billId => this.getBillingById(billId!.id))
+            return billingItem.save().then(async billId =>{
+                let phone  = customer.phone;
+                let name = customer.name;
+                let message= await billInvoice(name,invoicePath)
+                callApi.sendMessage({message, phone})
+                return this.getBillingById(billId!.id)
+                })
         }catch (e){
             if (e instanceof  ValidationError){
                 let message=[];
@@ -45,16 +53,22 @@ export class BillingService {
         try {
             // @ts-ignore
             return Product.findOne({where:{barCode:barCodeId}}).then((searchProduct)=>{
-                if (searchProduct.id){
+                if (searchProduct.id){    
                  return Vendor.findOne({where:{vendorId: vendorId}}).then((vendorProducts:VendorModel)=>{
-
-                        let elements =   vendorProducts.productIds.filter((element)=> element.id === searchProduct.id)
-                     delete searchProduct["dataValues"]["mrp"]
-                     return {
-
-                            product : {...elements[0],...searchProduct["dataValues"]},
-                            total:elements.length
-                     }
+                   
+                        if(vendorProducts.productIds.length >= 1){
+                            console.log(searchProduct.id,"GET USER PRIDC");
+                            let elements =   vendorProducts.productIds.filter((element)=> (element.id === searchProduct.id))
+                            console.log(elements,"GER ");
+                            delete searchProduct["dataValues"]["mrp"]
+                            return {
+       
+                                   product : {...elements[0],...searchProduct["dataValues"]},
+                                   total:elements.length
+                            }
+                        }
+                       else return {message:"Product Not Found"}
+                       
                     })
                 }
                 else {
@@ -72,6 +86,16 @@ export class BillingService {
 
     }
 
+
+    getVendorBills({vendorId}) {
+        try {
+
+            return Billing.findAll({where:{vendorId}})
+            
+        } catch (error) {
+            
+        }
+    }
     getVendorProduct ({vendorId,qrCodeId,barCodeId}:IScannedProduct) {
         try {
             // @ts-ignore
@@ -88,3 +112,11 @@ export class BillingService {
     }
 
 }
+
+/**
+ * 
+ * @param userName | User name who does Shopping
+ * @param vendorName | Vendor Name
+ * @param awsInvoice | invoice URL
+ * @returns 
+ */

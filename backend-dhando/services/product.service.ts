@@ -23,14 +23,16 @@ export class ProductService {
             image,
             weight,
             unit,
-            quantity
+            quantity 
         })
         try {
           await productItem.validate()
-            console.log('sdsd')
+          let getProduct = await Product.findOne({where:{barCode : barCode}})
+          if (getProduct){
+              return getProduct
+          }
+          else 
            return  productItem.save().then(u => this.getProductById(u!.id));
-
-
 
         }catch(e){
             if (e instanceof  ValidationError){
@@ -54,10 +56,14 @@ export class ProductService {
     getAll({offset}) {
         return Product.findAll({limit:10,offset:offset})
     }
+    
 
     getProductById(id: number) {
         return Product.findByPk(id, {
             attributes: ProductService.productAttributes
         }) as Bluebird<ProductGlobalModel>
+    }
+    getProductByBarCode(id: string) {
+        return Product.findOne({where:{barCode:id}}) as Bluebird<ProductGlobalModel>
     }
 }

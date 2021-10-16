@@ -7,12 +7,14 @@ import * as E from 'io-ts/Eq'
 import {matchedData} from "express-validator/filter";
 import {UserAddModel} from "../models/user.model";
 import {keys} from "fp-ts/Map";
+import Logger from '../lib/logger';
 
 
 
 
 export const billingRouter = Router();
 const billingService = new BillingService();
+
 
 billingRouter.post('/register',async (req, res) => {
     const payLoad = req.body as BillingModel;
@@ -28,8 +30,9 @@ billingRouter.post('/register',async (req, res) => {
     })
 })
 
-billingRouter.get('/sc',(req,res)=>{
+billingRouter.post('/sc',(req,res)=>{
     const payLoad = req.body as IScannedProduct;
+    console.log(JSON.stringify(payLoad));
      let pd = billingService.getScannedProductDetail(payLoad)
     return pd.then(b => {
         console.log(b)
@@ -46,6 +49,15 @@ billingRouter.get('/all',(req,res)=>{
     })
 })
 
+billingRouter.post('/vendorOrder',(req,res)=>{
+    const payLoad = req.body as BillingModel;
+    let pd = billingService.getVendorBills(payLoad)
+    return pd.then(b => {
+
+        return res.status(200).json(b)
+    })
+})
+
 
 
 /**
@@ -53,6 +65,7 @@ billingRouter.get('/all',(req,res)=>{
  * @param products
  */
 const validateProducts  = (products:[scanProductInterface])  => {
+    console.log(products);
     // @ts-ignore
     if (products.length === 0) {
         return false
@@ -60,7 +73,7 @@ const validateProducts  = (products:[scanProductInterface])  => {
     let res = false;
     products.forEach((product,index)=>{
     let objectKeys = Object.keys(product);
-    const toBeKeys = ['productId','mrp','sp','units','barCodeId','qrCodeId','weight','weightUnit']
+    const toBeKeys = ['productId','productName','mrp','sp','weight','weightUnit','units']
       let differenceIs =   _.isEqual(objectKeys.sort(),toBeKeys.sort());
             if (!differenceIs) {
                 res = false;

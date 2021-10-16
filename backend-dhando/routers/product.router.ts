@@ -4,6 +4,7 @@ import { validationResult } from 'express-validator/check'
 import { ProductService } from '../services/product.service'
 import { ProductGlobalModel,productModal} from '../models/product.model'
 import { ProductGlobalRule } from "../rules/product.rules";
+import { string } from 'fp-ts';
 
 
 export const productRouter = Router();
@@ -39,5 +40,15 @@ productRouter.get('/getAllProduct',ProductGlobalRule["fetchAllProduct"],(req,res
         return res.status(422).json(errors.array())
     const payload = req.body as { offset:number }
     const product = productService.getAll(payload);
+    return product.then(u => res.json(u))
+})
+
+productRouter.post('/globalProduct',(req,res)=>{
+    
+    const payload = req.body as { barCode:string }
+    if (!req?.body?.barCode){
+        return res.status(422).json({message:"pass barCode"})
+    }
+    const product = productService.getProductByBarCode(payload.barCode);
     return product.then(u => res.json(u))
 })

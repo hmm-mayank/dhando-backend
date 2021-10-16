@@ -6,10 +6,11 @@ export interface UserAddModel {
     id?: number
     email?: string
     password: string
-    phoneNumber?: number
+    phoneNumber: string
     countryCode?:number
     name?:string,
     gender?:string,
+    role?:string,
     dob?:string
 }
 
@@ -29,7 +30,7 @@ export interface AddressModal {
 
 export interface UserModel extends Sequelize.Model<UserModel, UserAddModel> {
     id: number
-    phoneNumber?: number
+    phoneNumber?: string
     createdAt: string
     password:string
     updatedAt: string
@@ -37,7 +38,7 @@ export interface UserModel extends Sequelize.Model<UserModel, UserAddModel> {
 
 export interface UserViewModel {
     id: number
-    phoneNumber:number
+    phoneNumber:string
 }
 
 
@@ -48,6 +49,7 @@ export const User = sequelize.define<UserModel, UserAddModel>('user', {
         autoIncrement: true,
         primaryKey: true
     },
+    role:STRING,
     email:Sequelize.STRING,
     phoneNumber:{
         unique:true,

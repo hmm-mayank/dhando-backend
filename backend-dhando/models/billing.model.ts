@@ -24,14 +24,16 @@ export interface BillingModel {
     id:number,
     vendorId:number,
     cashierId:number,
-    customerPhone:number,
+    customerPhone:string,
     customer:scanCustomerInterface,
     cartProduct:[scanProductInterface]
+    invoicePath:string
 }
 
  export interface BillingViewModel extends Sequelize.Model<any,BillingModel> {
     id?:number,
      customerPhone?:number,
+     vendorId?:number,
 
  }
  export interface  IScannedProduct {
@@ -67,7 +69,7 @@ export interface BillingModel {
          }
      },
      customerPhone: {
-         type:INTEGER,
+         type:STRING,
          allowNull:false,
          validate:{
              notEmpty:true,
@@ -78,7 +80,8 @@ export interface BillingModel {
     type:INTEGER,
     autoIncrement:true,
     primaryKey:true
-}
+},
+invoicePath:STRING
 
 },{
     createdAt:true,
