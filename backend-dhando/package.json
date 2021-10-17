@@ -4,7 +4,7 @@
   "main": "index.js",
   "scripts": {
     "test": "jest",
-    "serve": "nodemon index.ts",
+    "start": "nodemon index.ts",
     "coverage": "jest --coverage"
   },
   "author": "",
