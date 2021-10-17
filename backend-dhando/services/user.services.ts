@@ -2,7 +2,6 @@
 
 import * as bcrypt from 'bcrypt'
 import * as jwt from 'jsonwebtoken'
-import * as Bluebird from 'Bluebird'
 import { User, UserModel, UserAddModel, UserViewModel } from '../models/user.model'
 import {MessageService} from "./message.service";
 const messageService = new MessageService();
@@ -73,9 +72,9 @@ export class UserService {
         }) as Promise<boolean>
     }
 
-    getUserById(id: number) {
-        return User.findByPk(id, {
+    async getUserById(id: number) {
+        return await User.findByPk(id, {
             attributes: UserService.userAttributes
-        }) as Bluebird<UserViewModel>
+        }) 
     }
 }

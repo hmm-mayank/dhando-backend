@@ -26,7 +26,7 @@ billingRouter.post('/register',async (req, res) => {
     const bill = billingService.createBill(payLoad);
 
     return bill.then(b => {
-        return res.status(b?.status || 200).json(b)
+        return res.status(b["status"] || 200).json(b)
     })
 })
 

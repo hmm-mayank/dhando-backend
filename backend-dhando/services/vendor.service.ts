@@ -1,5 +1,4 @@
 import {Vendor, VendorModel, VendorViewModel} from '../models/vendor.model';
-import * as Bluebird from 'Bluebird';
 import * as Sequelize from 'sequelize'
 import {response} from "express";
 import * as _ from "lodash"
@@ -26,10 +25,10 @@ export class VendorService {
         })
         // return Vendor.create({shopName,productIds,userId}).then(vendor => this.getProductById(vendor!.id))
     }
-    getProductById(id: number) {
-        return Vendor.findOne({where:{id:id},
+    async getProductById(id: number) {
+        return await Vendor.findOne({where:{id:id},
             attributes: VendorService.vendorAttributes
-        }) as Bluebird<VendorModel>
+        }) 
     }
 
      getProductFromId({vendorId}: VendorViewModel) {

@@ -1,5 +1,4 @@
 import {Message, MessageGlobalModel, MessageModel} from "../models/message.model";
-import * as Bluebird from 'Bluebird'
 import {CallApi} from "../utils/callApi";
 
 const callApi = new CallApi();
@@ -38,10 +37,10 @@ export class MessageService {
         }
     }
 
-    getMessageById(id: number) {
-        return Message.findByPk(id, {
+    async getMessageById(id: number) {
+        return await Message.findByPk(id, {
             attributes: MessageService.messageAttributes
-        }) as Bluebird<MessageGlobalModel>
+        })
     }
     getMessageByUserId({phone}:MessageGlobalModel) {
         // @ts-ignore

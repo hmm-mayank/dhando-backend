@@ -1,6 +1,5 @@
 import {Billing, BillingModel, BillingViewModel, IScannedProduct} from "../models/billing.model";
 import {Vendor, VendorModel, VendorViewModel} from "../models/vendor.model";
-import * as Bluebird from 'Bluebird';
 import {ValidationError} from "sequelize";
 import {VendorService} from "./vendor.service";
 import {Product, ProductGlobalModel} from "../models/product.model";
@@ -43,10 +42,10 @@ export class BillingService {
         }
 
     }
-    getBillingById(id: number) {
-        return Billing.findOne({where:{id:id},
+    async getBillingById(id: number) {
+        return await Billing.findOne({where:{id:id},
             attributes: BillingService.billingAttributes
-        }) as Bluebird<BillingViewModel>
+        }) 
     }
 
     getScannedProductDetail ({vendorId,qrCodeId,barCodeId}:IScannedProduct) {

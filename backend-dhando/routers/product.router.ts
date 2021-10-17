@@ -19,7 +19,7 @@ productRouter.post('/register',ProductGlobalRule["forRegister"],(req,res)=>{
     const product = productService.register(payload)
     return product.then(u => {
         console.log(u)
-        return  res.status(u?.status || 200).json(u)
+        return  res.status(u["status"] || 200).json(u)
     })
 })
 
