@@ -33,6 +33,7 @@ export interface ProductAddModel {
     unit?:units,
     weight?:Number,
     quantity?:Number,
+    category?:number,
     source:string
 }
 
@@ -45,6 +46,7 @@ export interface productModal extends Sequelize.Model<productModal,ProductAddMod
     unit:units,
     weight?:Number,
     quantity?:Number,
+    category?:number,
     qrCode?:string
     barCode?:string
     source:string
@@ -73,6 +75,7 @@ export const Product = sequelize.define<productModal,ProductAddModel>('globalPro
             isIn:[['kg','g','ml','lit','q','gm']]
         }
     },
+    category:INTEGER,
     weight:FLOAT,
     quantity:INTEGER
 

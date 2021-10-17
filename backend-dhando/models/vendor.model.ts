@@ -12,6 +12,14 @@ export interface  VendorProductPrice {
     sku:number,
 }
 
+export interface VendorCustomerSetting {
+    invoicePrint:boolean, // default TRUE
+    invoiceMessage:boolean, // default FALSE
+    discountOrMrpPrice:boolean, // by default MRP
+    showGSTNOnBill:boolean // default TRUE
+    invoiceBottomText:string // default "Thanks for Shopping !! visit Again !!"
+}
+
 
 export interface VendorModel {
     id?:number

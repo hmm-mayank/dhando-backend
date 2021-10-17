@@ -8,6 +8,7 @@ import morganMiddleware from "./config/morganMiddileWare";
 import {vendorRouter} from "./routers/vendor.router";
 import {billingRouter} from "./routers/billing.router";
 import {messageRouter} from "./routers/message.router";
+import { categoryRouter } from './routers/category.routes'
 
 const app = express()
 const port = 4001
@@ -21,6 +22,7 @@ app.use('/product', productRouter)
 app.use('/vendor', vendorRouter)
 app.use('/billing',billingRouter  )
 app.use('/message',messageRouter  )
+app.use('/category',categoryRouter  )
 
 
 // Unprotected Get

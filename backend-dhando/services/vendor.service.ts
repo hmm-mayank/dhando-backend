@@ -1,6 +1,5 @@
 import {Vendor, VendorModel, VendorViewModel} from '../models/vendor.model';
-import * as Sequelize from 'sequelize'
-import {response} from "express";
+
 import * as _ from "lodash"
 export class VendorService {
 
