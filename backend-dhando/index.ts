@@ -9,6 +9,7 @@ import {vendorRouter} from "./routers/vendor.router";
 import {billingRouter} from "./routers/billing.router";
 import {messageRouter} from "./routers/message.router";
 import { categoryRouter } from './routers/category.routes'
+import { OfferRoutes } from './routers/offer.route'
 
 const app = express()
 const port = 4001
@@ -23,7 +24,7 @@ app.use('/vendor', vendorRouter)
 app.use('/billing',billingRouter  )
 app.use('/message',messageRouter  )
 app.use('/category',categoryRouter  )
-
+app.use('/offer',OfferRoutes  )
 
 // Unprotected Get
 app.get('/some-resource', (req, res, next) => {
