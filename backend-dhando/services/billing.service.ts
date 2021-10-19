@@ -27,8 +27,8 @@ export class BillingService {
             return billingItem.save().then(async billId =>{
                 let phone  = customer.phone;
                 let name = customer.name;
-                let message= await billInvoice(name,invoicePath)
-                callApi.sendMessage({message, phone})
+                // let message= await billInvoice(name,invoicePath)
+                // callApi.sendMessage({message, phone})
                 return this.getBillingById(billId!.id)
                 })
         }catch (e){
